@@ -3,6 +3,7 @@
 	<name>RestBanqueService</name>
 	<comment></comment>
 	<projects>
+		<project>validation-api-1.1.0.Final</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
