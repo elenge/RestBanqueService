@@ -10,10 +10,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name= "CompteBancaire")
-public class CompteBancaire {
+public class CompteBancaire implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String client;
-	private static int numeroCompte = 0;
+	private static int numeroCompte = 1;
+	private int idCompte;
 	private String devise;
 	private double montant;
 	
@@ -40,7 +45,8 @@ public class CompteBancaire {
 			this.client= nomClient;
 			this.montant= 0;
 			this.devise= deviseCompte;
-			this.numeroCompte+=1;
+			this.idCompte = numeroCompte;
+			numeroCompte++;
 			//ajout du compte à la liste
 		}else {
 			System.out.println("Un des champs est vide.");
@@ -48,13 +54,13 @@ public class CompteBancaire {
 	
 	}
 
-
+	@XmlElement
 	public String getClient() {
 		return client;
 	}
 
-
-	public static int getNumeroCompte() {
+	@XmlElement
+	public int getNumeroCompte() {
 		return numeroCompte;
 	}
 

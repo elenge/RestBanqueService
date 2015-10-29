@@ -16,7 +16,9 @@ public class CompteDao {
 		
 		List<CompteBancaire> compteList = null;
 		try{
-			File file = new File("Comptes.dat");
+			
+			File file = new File("comptes.dat");
+			
 			if (!file.exists()) {
 				
 				CompteBancaire compte = new CompteBancaire("Jean-Luc P.", "euros");
@@ -25,10 +27,15 @@ public class CompteDao {
 				saveCompteList(compteList);
 			}
 			else{
+				
 				FileInputStream fis = new FileInputStream(file);
+				
 				ObjectInputStream ois = new ObjectInputStream(fis);
+				
 				compteList = (List<CompteBancaire>) ois.readObject();
+				
 				ois.close();
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -86,7 +93,7 @@ public class CompteDao {
 	private void saveCompteList(List<CompteBancaire> compteList) {
 		
 		try {
-			File file = new File("Comptes.dat");
+			File file = new File("comptes.dat");
 			FileOutputStream fos;
 			
 			fos = new FileOutputStream(file);

@@ -26,21 +26,21 @@ public class CompteService {
 	
 	@GET
 	@Path("/comptes")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_XML)
 	public List<CompteBancaire> getComptes(){
 		return cDAO.getAllComptes();
 	}
 	
 	@GET
 	@Path("/comptes/{numeroCompte}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_XML)
 	public CompteBancaire getCompte(@PathParam("numeroCompte") int numeroCompte){
 		return cDAO.getCompte(numeroCompte);
 	}
 	
 	@PUT
 	   @Path("/comptes")
-	   @Produces(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_XML)
 	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	   public String createCompte(
 	      @FormParam("nomClient") String nomClient,
@@ -56,7 +56,7 @@ public class CompteService {
 	
 	 @DELETE
 	   @Path("/comptes/{numeroCompte}")
-	   @Produces(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_XML)
 	   public String deleteCompte(@PathParam("numeroCompte") int numeroCompte){
 	      int result = cDAO.deleteCompte(numeroCompte);
 	      if(result == 1){
@@ -67,7 +67,7 @@ public class CompteService {
 
 	   @OPTIONS
 	   @Path("/comptes")
-	   @Produces(MediaType.APPLICATION_JSON)
+	   @Produces(MediaType.APPLICATION_XML)
 	   public String getSupportedOperations(){
 	      return "<operations>GET, PUT, DELETE</operations>";
 	   }
