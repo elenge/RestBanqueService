@@ -10,8 +10,17 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author arpbo
+ *
+ */
 public class CompteDao {
-
+	
+	
+	/**
+	 * Le fichier comptes.dat se situe dans le répertoire tomcat une fois le war du projet déployé dans webapps
+	 * @return
+	 */
 	public List<CompteBancaire> getAllComptes(){
 		
 		List<CompteBancaire> compteList = null;
@@ -21,7 +30,7 @@ public class CompteDao {
 			
 			if (!file.exists()) {
 				
-				CompteBancaire compte = new CompteBancaire("Jean-Luc P.", "euros");
+				CompteBancaire compte = new CompteBancaire("Jean-Luc P.");
 				compteList = new ArrayList<CompteBancaire>();
 				compteList.add(compte);
 				saveCompteList(compteList);
@@ -46,6 +55,7 @@ public class CompteDao {
 		
 	}
 	
+	
 	 public CompteBancaire getCompte(int numeroCompte){
 	      List<CompteBancaire> comptesList = getAllComptes();
 
@@ -57,8 +67,34 @@ public class CompteDao {
 	      return null;
 	   }
 	
-	public int addCompte(CompteBancaire cb){
+	 
+	 /**
+	 * Méthode info de retourner le solde du compte n° XXX
+	 * @param numeroCompte
+	 * @return
+	 */
+	public double getSolde(int numeroCompte){
+		 
+		 List<CompteBancaire> comptesList = getAllComptes();
+
+	      for(CompteBancaire cb: comptesList){
+	         if(cb.getNumeroCompte() == numeroCompte){
+	            return cb.getSolde();
+	         }
+	      }
+	      return 0;
+	 }
+	 
+	 
+	/**
+	 * Créer un compte bancaire
+	 * On vérifie que le compte n'existe pas déjà
+	 * @param cb
+	 * @return
+	 */
+	public int addCompte(String proprietaire){
 		
+		CompteBancaire cb = new CompteBancaire(proprietaire);
 		List<CompteBancaire> compteList = getAllComptes();
 		boolean compteExists = false;
 		for (CompteBancaire compte : compteList){
@@ -75,6 +111,65 @@ public class CompteDao {
 		return 0;
 	}
 	
+	/**
+	 * On effectue un dépôt, donc on ajoute le montant à la somme précédente du compte et on modifie le montant total
+	 * On vérifie que le montant est >= 0
+	 * Si false soit le compte n'existe pas, soit le montant est inférieur à 0 ou autre
+	 * @param montant
+	 * @param nCpt
+	 * @return
+	 */
+	public boolean doDepot(double montant, int nCpt){
+		
+		if(montant>=0){
+			List<CompteBancaire> comptesList = getAllComptes();
+
+		      for(CompteBancaire cb: comptesList){
+		         if(cb.getNumeroCompte() == nCpt){
+		            cb.setSolde(montant+cb.getSolde());
+		            saveCompteList(comptesList);
+		            return true;
+		         }
+		      }
+		      return false;	
+		} else {
+			return false;
+		}
+		
+	}
+	
+	
+	/**
+	 * On effectue un retrait sur le compte numéro nCpt
+	 * Renvoie false si le compte n'existe pas, le montant est inférieur à 0 ou autre, ou si le compte n'a pas le solde suffisant
+	 * @param montant
+	 * @param nCpt
+	 * @return
+	 */
+	public boolean doRetrait(double montant, int nCpt){
+		
+		if(montant>=0){
+			List<CompteBancaire> comptesList = getAllComptes();
+
+		      for(CompteBancaire cb: comptesList){
+		         if(cb.getNumeroCompte() == nCpt){
+		        	 if(cb.getSolde()>=montant){
+		        		 cb.setSolde(cb.getSolde()-montant);
+		        		 saveCompteList(comptesList);
+		        		 return true;
+		        	 } else {
+		        		 return false;
+		        	 }
+		         }
+		      }
+		      return false;	
+		} else {
+			return false;
+		}
+		
+	}
+	
+	
 	 public int deleteCompte(int numero){
 	      List<CompteBancaire> compteList = getAllComptes();
 
@@ -90,6 +185,11 @@ public class CompteDao {
 	   }
 	
 	
+	/**
+	 * Méthode qui permet de sauvegarder la liste des comptes dans le fichier comptes.dat
+	 * Indispensable pour sauvegarder une MODIFICATION sur un compte ou autre
+	 * @param compteList
+	 */
 	private void saveCompteList(List<CompteBancaire> compteList) {
 		
 		try {
