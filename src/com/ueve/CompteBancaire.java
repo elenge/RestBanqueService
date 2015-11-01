@@ -16,11 +16,10 @@ public class CompteBancaire implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String client;
+	private String proprietaire;
 	private static int numeroCompte = 1;
 	private int idCompte;
-	private String devise;
-	private double montant;
+	private double solde;
 	
 	
 	/**
@@ -38,16 +37,13 @@ public class CompteBancaire implements Serializable{
 	 * Initialisation du montant à 0
 	 * @param nomClient nom du client auquel sera rattaché le compte
 	 */
-	public CompteBancaire(String nomClient, String deviseCompte){
+	public CompteBancaire(String proprietaire){
 		
-		if(nomClient!=null && deviseCompte!=null){
-			//vérifier que le compte n'existe pas déjà
-			this.client= nomClient;
-			this.montant= 0;
-			this.devise= deviseCompte;
+		if(proprietaire!=null){
+			this.proprietaire= proprietaire;
+			this.solde= 0;
 			this.idCompte = numeroCompte;
 			numeroCompte++;
-			//ajout du compte à la liste
 		}else {
 			System.out.println("Un des champs est vide.");
 		}
@@ -55,8 +51,8 @@ public class CompteBancaire implements Serializable{
 	}
 
 	@XmlElement
-	public String getClient() {
-		return client;
+	public String getProprietaire() {
+		return proprietaire;
 	}
 
 	@XmlElement
@@ -65,32 +61,23 @@ public class CompteBancaire implements Serializable{
 	}
 
 
-	public String getDevise() {
-		return devise;
-	}
-
-
 	/**
 	 * Méthode afin d'afficher le montant du compte
 	 * @return double montant
 	 */
-	public double getMontant() {
-		return montant;
+	public double getSolde() {
+		return solde;
 	}
 	
-	@XmlElement
-	public void setDevise(String devise) {
-		this.devise = devise;
-	}
 
 	@XmlElement
-	public void setMontant(double montant) {
-		this.montant = montant;
+	public void setSolde(double solde) {
+		this.solde = solde;
 	}
 
 
 	public String toString(){
-		return "Le compte n° : "+this.numeroCompte+" appartient au client "+this.client+".\n\n"+"Le montant du compte est : "+this.montant+" "+this.devise+".";
+		return "Le compte n° : "+this.numeroCompte+" appartient à "+this.proprietaire+".\n\n"+"Le montant du compte est : "+this.solde+".";
 	}
 
 
@@ -98,10 +85,9 @@ public class CompteBancaire implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((client == null) ? 0 : client.hashCode());
-		result = prime * result + ((devise == null) ? 0 : devise.hashCode());
+		result = prime * result + ((proprietaire == null) ? 0 : proprietaire.hashCode());
 		long temp;
-		temp = Double.doubleToLongBits(montant);
+		temp = Double.doubleToLongBits(solde);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
@@ -116,17 +102,12 @@ public class CompteBancaire implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		CompteBancaire other = (CompteBancaire) obj;
-		if (client == null) {
-			if (other.client != null)
+		if (proprietaire == null) {
+			if (other.proprietaire != null)
 				return false;
-		} else if (!client.equals(other.client))
+		} else if (!proprietaire.equals(other.proprietaire))
 			return false;
-		if (devise == null) {
-			if (other.devise != null)
-				return false;
-		} else if (!devise.equals(other.devise))
-			return false;
-		if (Double.doubleToLongBits(montant) != Double.doubleToLongBits(other.montant))
+		if (Double.doubleToLongBits(solde) != Double.doubleToLongBits(other.solde))
 			return false;
 		return true;
 	}
