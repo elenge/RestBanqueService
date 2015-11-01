@@ -38,21 +38,54 @@ public class CompteService {
 		return cDAO.getCompte(numeroCompte);
 	}
 	
+	@GET
+	@Path("/comptes/{numeroCompte}/solde")
+	@Produces(MediaType.APPLICATION_XML)
+	public double getSolde(@PathParam("numeroCompte") int numeroCompte){
+		return cDAO.getSolde(numeroCompte);
+	}
+	
 	@PUT
-	   @Path("/comptes")
+	   @Path("/comptes/add")
 	   @Produces(MediaType.APPLICATION_XML)
 	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	   public String createCompte(
-	      @FormParam("nomClient") String nomClient,
-	      @FormParam("devise") String devise,
+	      @FormParam("proprietaire") String proprietaire,
 	      @Context HttpServletResponse servletResponse) throws IOException{
-	      CompteBancaire newCompte = new CompteBancaire(nomClient, devise);
-	      int result = cDAO.addCompte(newCompte);
+	      int result = cDAO.addCompte(proprietaire);
 	      if(result == 1){
 	         return SUCCESS_RESULT;
 	      }
 	      return FAILURE_RESULT;
 	   }
+	
+	@POST
+	   @Path("/comptes/depot")
+	   @Produces(MediaType.APPLICATION_XML)
+	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	   public boolean depotCompte(@FormParam("nCpt") int nCpt,
+	      @FormParam("montant") double montant,
+	      @Context HttpServletResponse servletResponse) throws IOException{
+		
+			return cDAO.doDepot(montant, nCpt);
+		
+	      
+	   }
+	
+	@POST
+	   @Path("/comptes/retrait")
+	   @Produces(MediaType.APPLICATION_XML)
+	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	   public boolean retraitCompte(@FormParam("nCpt") int nCpt,
+	      @FormParam("montant") double montant,
+	      @Context HttpServletResponse servletResponse) throws IOException{
+		
+			return cDAO.doRetrait(montant, nCpt);
+		
+	      
+	   }
+	
+	
 	
 	 @DELETE
 	   @Path("/comptes/{numeroCompte}")
@@ -69,6 +102,6 @@ public class CompteService {
 	   @Path("/comptes")
 	   @Produces(MediaType.APPLICATION_XML)
 	   public String getSupportedOperations(){
-	      return "<operations>GET, PUT, DELETE</operations>";
+	      return "<operations>GET, PUT, POST, DELETE</operations>";
 	   }
 }
