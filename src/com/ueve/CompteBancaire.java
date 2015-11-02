@@ -40,10 +40,12 @@ public class CompteBancaire implements Serializable{
 	public CompteBancaire(String proprietaire){
 		
 		if(proprietaire!=null){
+
 			this.proprietaire= proprietaire;
 			this.solde= 0;
-			this.idCompte = numeroCompte;
-			numeroCompte++;
+			this.idCompte = this.numeroCompte;
+			this.numeroCompte++;
+
 		}else {
 			System.out.println("Un des champs est vide.");
 		}
@@ -56,28 +58,28 @@ public class CompteBancaire implements Serializable{
 	}
 
 	@XmlElement
-	public int getNumeroCompte() {
-		return numeroCompte;
+	public int getIdCompte() {
+		return idCompte;
 	}
-
 
 	/**
 	 * Méthode afin d'afficher le montant du compte
 	 * @return double montant
 	 */
+	@XmlElement
 	public double getSolde() {
 		return solde;
 	}
 	
 
-	@XmlElement
+	
 	public void setSolde(double solde) {
 		this.solde = solde;
 	}
 
 
 	public String toString(){
-		return "Le compte n° : "+this.numeroCompte+" appartient à "+this.proprietaire+".\n\n"+"Le montant du compte est : "+this.solde+".";
+		return "Le compte n° "+this.idCompte+" appartient à "+this.proprietaire+"."+" Le montant du compte est : "+this.solde+".\n";
 	}
 
 
@@ -85,6 +87,7 @@ public class CompteBancaire implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + idCompte;
 		result = prime * result + ((proprietaire == null) ? 0 : proprietaire.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(solde);
@@ -102,6 +105,8 @@ public class CompteBancaire implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		CompteBancaire other = (CompteBancaire) obj;
+		if (idCompte != other.idCompte)
+			return false;
 		if (proprietaire == null) {
 			if (other.proprietaire != null)
 				return false;
@@ -111,4 +116,7 @@ public class CompteBancaire implements Serializable{
 			return false;
 		return true;
 	}
+
+
+	
 }

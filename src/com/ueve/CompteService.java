@@ -32,17 +32,17 @@ public class CompteService {
 	}
 	
 	@GET
-	@Path("/comptes/{numeroCompte}")
+	@Path("/comptes/{idCompte}")
 	@Produces(MediaType.APPLICATION_XML)
-	public CompteBancaire getCompte(@PathParam("numeroCompte") int numeroCompte){
-		return cDAO.getCompte(numeroCompte);
+	public CompteBancaire getCompte(@PathParam("idCompte") int idCompte){
+		return cDAO.getCompte(idCompte);
 	}
 	
 	@GET
-	@Path("/comptes/{numeroCompte}/solde")
+	@Path("/comptes/solde/{idCompte}")
 	@Produces(MediaType.APPLICATION_XML)
-	public double getSolde(@PathParam("numeroCompte") int numeroCompte){
-		return cDAO.getSolde(numeroCompte);
+	public String getSolde(@PathParam("idCompte") int idCompte){
+		return Double.toString(cDAO.getSolde(idCompte));
 	}
 	
 	@PUT
@@ -52,22 +52,22 @@ public class CompteService {
 	   public String createCompte(
 	      @FormParam("proprietaire") String proprietaire,
 	      @Context HttpServletResponse servletResponse) throws IOException{
-	      int result = cDAO.addCompte(proprietaire);
-	      if(result == 1){
-	         return SUCCESS_RESULT;
+	      boolean result = cDAO.addCompte(proprietaire);
+	      if(result == true){
+	         return "Le compte a bien été ajouté";
 	      }
-	      return FAILURE_RESULT;
+	      return "Le compte n'a pas été ajouté, but why !?";
 	   }
 	
 	@POST
 	   @Path("/comptes/depot")
 	   @Produces(MediaType.APPLICATION_XML)
 	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	   public boolean depotCompte(@FormParam("nCpt") int nCpt,
+	   public String depotCompte(@FormParam("idCompte") int idCompte,
 	      @FormParam("montant") double montant,
 	      @Context HttpServletResponse servletResponse) throws IOException{
 		
-			return cDAO.doDepot(montant, nCpt);
+			return Boolean.toString(cDAO.doDepot(montant, idCompte));
 		
 	      
 	   }
@@ -76,32 +76,31 @@ public class CompteService {
 	   @Path("/comptes/retrait")
 	   @Produces(MediaType.APPLICATION_XML)
 	   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	   public boolean retraitCompte(@FormParam("nCpt") int nCpt,
+	   public String retraitCompte(@FormParam("idCompte") int idCompte,
 	      @FormParam("montant") double montant,
 	      @Context HttpServletResponse servletResponse) throws IOException{
-		
-			return cDAO.doRetrait(montant, nCpt);
-		
-	      
+			return Boolean.toString(cDAO.doRetrait(montant, idCompte));
 	   }
 	
 	
 	
 	 @DELETE
-	   @Path("/comptes/{numeroCompte}")
+	   @Path("/comptes/{idCompte}")
 	   @Produces(MediaType.APPLICATION_XML)
-	   public String deleteCompte(@PathParam("numeroCompte") int numeroCompte){
-	      int result = cDAO.deleteCompte(numeroCompte);
-	      if(result == 1){
-	         return SUCCESS_RESULT;
+	   public String deleteCompte(@PathParam("idCompte") int idCompte){
+	      boolean result = cDAO.deleteCompte(idCompte);
+	      if(result == true){
+	    	  return "Suppression effectuée avec succès";
+	      } else{
+	    	  return "Suppression échouée";
 	      }
-	      return FAILURE_RESULT;
+	     
 	   }
 
 	   @OPTIONS
 	   @Path("/comptes")
 	   @Produces(MediaType.APPLICATION_XML)
 	   public String getSupportedOperations(){
-	      return "<operations>GET, PUT, POST, DELETE</operations>";
+	      return "Voici la liste des opérations possibles : <operations>GET /comptes | /comptes/{id} | /comptes/solde/{id} | , PUT /comptes/add?proprietaire=xxx, POST /comptes/retrait?idCompte=xx&montant=xx | /comptes/depot?.., DELETE /comptes/{id}</operations>";
 	   }
 }

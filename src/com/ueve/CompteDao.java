@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 /**
  * @author arpbo
  *
@@ -36,7 +38,7 @@ public class CompteDao {
 				saveCompteList(compteList);
 			}
 			else{
-				
+
 				FileInputStream fis = new FileInputStream(file);
 				
 				ObjectInputStream ois = new ObjectInputStream(fis);
@@ -56,11 +58,11 @@ public class CompteDao {
 	}
 	
 	
-	 public CompteBancaire getCompte(int numeroCompte){
+	 public CompteBancaire getCompte(int idCompte){
 	      List<CompteBancaire> comptesList = getAllComptes();
 
 	      for(CompteBancaire cb: comptesList){
-	         if(cb.getNumeroCompte() == numeroCompte){
+	         if(cb.getIdCompte() == idCompte){
 	            return cb;
 	         }
 	      }
@@ -73,12 +75,12 @@ public class CompteDao {
 	 * @param numeroCompte
 	 * @return
 	 */
-	public double getSolde(int numeroCompte){
+	public double getSolde(int idCompte){
 		 
 		 List<CompteBancaire> comptesList = getAllComptes();
 
 	      for(CompteBancaire cb: comptesList){
-	         if(cb.getNumeroCompte() == numeroCompte){
+	         if(cb.getIdCompte() == idCompte){
 	            return cb.getSolde();
 	         }
 	      }
@@ -92,13 +94,13 @@ public class CompteDao {
 	 * @param cb
 	 * @return
 	 */
-	public int addCompte(String proprietaire){
-		
+	public boolean addCompte(String proprietaire){
+
 		CompteBancaire cb = new CompteBancaire(proprietaire);
 		List<CompteBancaire> compteList = getAllComptes();
 		boolean compteExists = false;
 		for (CompteBancaire compte : compteList){
-			if(compte.getNumeroCompte() == cb.getNumeroCompte()){
+			if(compte.getIdCompte() == cb.getIdCompte()){
 				compteExists = true;
 				break;
 			}
@@ -106,9 +108,9 @@ public class CompteDao {
 		if(!compteExists){
 			compteList.add(cb);
 			saveCompteList(compteList);
-			return 1;
+			return true;
 		}
-		return 0;
+		return false;
 	}
 	
 	/**
@@ -125,7 +127,7 @@ public class CompteDao {
 			List<CompteBancaire> comptesList = getAllComptes();
 
 		      for(CompteBancaire cb: comptesList){
-		         if(cb.getNumeroCompte() == nCpt){
+		         if(cb.getIdCompte() == nCpt){
 		            cb.setSolde(montant+cb.getSolde());
 		            saveCompteList(comptesList);
 		            return true;
@@ -152,7 +154,7 @@ public class CompteDao {
 			List<CompteBancaire> comptesList = getAllComptes();
 
 		      for(CompteBancaire cb: comptesList){
-		         if(cb.getNumeroCompte() == nCpt){
+		         if(cb.getIdCompte() == nCpt){
 		        	 if(cb.getSolde()>=montant){
 		        		 cb.setSolde(cb.getSolde()-montant);
 		        		 saveCompteList(comptesList);
@@ -170,18 +172,18 @@ public class CompteDao {
 	}
 	
 	
-	 public int deleteCompte(int numero){
+	 public boolean deleteCompte(int numero){
 	      List<CompteBancaire> compteList = getAllComptes();
 
 	      for(CompteBancaire compte: compteList){
-	         if(compte.getNumeroCompte() == numero){
+	         if(compte.getIdCompte() == numero){
 	            int index = compteList.indexOf(compte);			
 	            compteList.remove(index);
 	            saveCompteList(compteList);
-	            return 1;   
+	            return true;   
 	         }
 	      }		
-	      return 0;
+	      return false;
 	   }
 	
 	
