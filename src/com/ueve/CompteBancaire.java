@@ -1,5 +1,6 @@
 package com.ueve;
 
+import java.io.File;
 import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -17,7 +18,7 @@ public class CompteBancaire implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String proprietaire;
-	private static int numeroCompte = 1;
+	//private static int numeroCompte=1;
 	private int idCompte;
 	private double solde;
 	
@@ -38,18 +39,24 @@ public class CompteBancaire implements Serializable{
 	 * @param nomClient nom du client auquel sera rattaché le compte
 	 */
 	public CompteBancaire(String proprietaire){
-		
-		if(proprietaire!=null){
-
-			this.proprietaire= proprietaire;
-			this.solde= 0;
-			this.idCompte = this.numeroCompte;
-			this.numeroCompte++;
-
-		}else {
-			System.out.println("Un des champs est vide.");
+		File file = new File("comptes.dat");
+		if(!file.exists()){
+			if(proprietaire!=null){
+				this.proprietaire= proprietaire;
+				this.solde= 0;
+				this.idCompte=1;
+				//this.idCompte = this.numeroCompte;
+				//this.numeroCompte++;
+			}
+		} else {
+			CompteDao cDao = new CompteDao();
+			if(proprietaire!=null){
+				this.proprietaire= proprietaire;
+				this.solde= 0;
+				this.idCompte=cDao.getAllComptes().size()+1;
+			}	
 		}
-	
+		
 	}
 
 	@XmlElement
